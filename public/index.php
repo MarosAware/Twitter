@@ -1,5 +1,22 @@
 <?php
 
+session_start();
+require (__DIR__ . '/../src/Database.php');
+require (__DIR__ . '/../src/User.php');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user = new User();
+    $user = $user->login(Database::connect(), $_POST['email'], $_POST['password']);
+
+    if($user instanceof User) {
+        $_SESSION['userId'] = $user->getId();
+        header('Location: home.php');
+    } else {
+        echo 'Invalid email or password.';
+    }
+}
+
+
 
 
 ?>
@@ -14,18 +31,17 @@
     <title>Twitter</title>
 </head>
 <body>
-<h1>Witamy na stronie domowej</h1>
+<h1>Witamy na stronie głównej</h1>
 <hr>
 
 <h2>Zaloguj się!</h2>
-<form action="link.php" method="post" role="form">
-
-    <label for="name">Username</label><br>
-    <input type="text" name="userName" id="name"><br>
-
+<form action="index.php" method="post" role="form">
 
     <label for="email">Email</label><br>
     <input type="email" name="email" id="email"><br>
+
+    <label for="password">Password</label><br>
+    <input type="password" name="password" id="password"><br>
 
     <input type="submit" value="Zaloguj">
 </form>
