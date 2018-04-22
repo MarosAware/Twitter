@@ -29,7 +29,6 @@ class Database
         self::$database = $value;
     }
 
-
     public static function connect()
     {
         try {
@@ -40,7 +39,7 @@ class Database
                     new PDO('mysql:host=' . self::$host . ';dbname=' . self::$database, self::$username, self::$password);
 
                 self::$dbObj->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                echo "Connected";
+                //echo "Connected";
             }
 
             return self::$dbObj;

@@ -14,7 +14,7 @@ class Tweet
 
     private function isValidText($text)
     {
-        if (!empty($text) && mb_strlen($text) > 0 && mb_strlen($text) < 140) {
+        if ((empty($text) === false) && mb_strlen($text) > 0 && mb_strlen($text) <= 140) {
             return true;
         } else {
             return false;
@@ -23,7 +23,7 @@ class Tweet
 
     public static function loadTweetById(PDO $conn, $id)
     {
-        $stmt = $conn->prepare('SELECT * FROM Tweet WHERE id=:id');
+        $stmt = $conn->prepare('SELECT * FROM Tweets WHERE id=:id');
         $result = $stmt->execute(['id' => $id]);
 
         if ($result === true && $stmt->rowCount() > 0) {
@@ -41,7 +41,7 @@ class Tweet
     public static function loadAllTweetsByUserId(PDO $conn, $userId)
     {
         $allTweets = [];
-        $stmt = $conn->prepare('SELECT * FROM Tweet WHERE userId=:userId');
+        $stmt = $conn->prepare('SELECT * FROM Tweets WHERE userId=:userId');
         $result = $stmt->execute(['userId' => $userId]);
 
         if ($result === true && $stmt->rowCount() > 0) {
@@ -60,7 +60,7 @@ class Tweet
     public static function loadAllTweets(PDO $conn)
     {
         $allTweets = [];
-        $query = "SELECT * FROM Tweet ORDER BY id DESC";
+        $query = "SELECT * FROM Tweets ORDER BY id DESC";
         $result = $conn->query($query);
 
 
@@ -80,7 +80,7 @@ class Tweet
     public function saveToDB(PDO $conn)
     {
         if ($this->id === -1) { //Save Tweet to DB
-            $query = "INSERT INTO Tweet(userId, text, creationDate) VALUES(:userId, :text, :creationDate)";
+            $query = "INSERT INTO Tweets (userId, text, creationDate) VALUES(:userId, :text, :creationDate)";
 
             $stmt = $conn->prepare($query);
             $result = $stmt->execute(
@@ -94,22 +94,22 @@ class Tweet
             if ($result !== false) {
                 $this->id = $conn->lastInsertId();
                 return true;
-            } else { //Tweet Exist so we update
-                $stmt = $conn->prepare(
-                    'UPDATE Tweet SET userId=:userId, text=:text, creationDate=:creationDate WHERE id=:id');
-
-                $result = $stmt->execute(
-                    [
-                        'userId' => $this->userId,
-                        'text' => $this->text,
-                        'creationDate' => $this->creationDate
-                    ]
-                );
-                if ($result === true) {
-                    return true;
-                }
             }
 
+        } else { //Tweet Exist so we update
+            $stmt = $conn->prepare(
+                'UPDATE Tweet SET userId=:userId, text=:text, creationDate=:creationDate WHERE id=:id');
+
+            $result = $stmt->execute(
+                [
+                    'userId' => $this->userId,
+                    'text' => $this->text,
+                    'creationDate' => $this->creationDate
+                ]
+            );
+            if ($result === true) {
+                return true;
+            }
         }
         return false;
     }
@@ -143,6 +143,7 @@ class Tweet
     {
         if($this->isValidText($text)) {
             $this->text = $text;
+            return true;
         }else {
             return false;
         }

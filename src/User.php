@@ -200,6 +200,19 @@ class User
         return $this->username;
     }
 
+    public static function getUserNameById(PDO $conn, $userId)
+    {
+        $stmt = $conn->prepare('SELECT username FROM Users WHERE id=:userId');
+        $result = $stmt->execute(['userId' => $userId]);
+
+        if($result === true && $stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $row['username'];
+        } else {
+            return false;
+        }
+    }
+
     public function getEmail()
     {
         return $this->email;
