@@ -4,19 +4,22 @@ session_start();
 require (__DIR__ . '/../src/Database.php');
 require (__DIR__ . '/../src/User.php');
 
+if(isset($_SESSION['userId'])) {
+    header('Location: home.php');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = new User();
     $user = $user->login(Database::connect(), $_POST['email'], $_POST['password']);
 
+    $msg = false;
     if($user instanceof User) {
         $_SESSION['userId'] = $user->getId();
         header('Location: home.php');
     } else {
-        echo 'Invalid email or password.';
+        $msg =  'Invalid email or password.';
     }
 }
-
-
 
 
 ?>
@@ -46,6 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <input type="submit" value="Zaloguj">
 </form>
 
+<p>
+    <?php
+        if (!empty($msg) && isset($msg)) {
+            echo $msg;
+        }
+    ?>
+</p>
+
+<hr>
 <p>Jeśli nie masz jeszcze konta - <a href="register.php">Zarejestruj się!</a></p>
 
 </body>

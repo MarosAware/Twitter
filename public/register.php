@@ -1,6 +1,8 @@
 <?php
-
+session_start();
+require (__DIR__ . '/../src/Database.php');
 require (__DIR__ . '/../src/User.php');
+
 
 //MSG can be in session or can be array
 //Do it later
@@ -22,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
 
         if($newUser->saveToDB(Database::connect())) {
-            $msg = 'Your account was created successful.';
-            $id = $newUser->getId();
+            $_SESSION['userId'] = $newUser->getId();
+            header('Location: home.php');
         }
     }
 

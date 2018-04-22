@@ -3,14 +3,44 @@ session_start();
 require (__DIR__ . '/../src/Database.php');
 require (__DIR__ . '/../src/User.php');
 require (__DIR__ . '/../src/Tweet.php');
+require (__DIR__ . '/../src/Comment.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $tweet = Tweet::loadTweetById(Database::connect(), $_GET['tweetId']);
+$loggedUser = $_SESSION['userId'];
+
+if(!isset($loggedUser)) {
+    header('Location: index.php');
 }
 
-//if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//
-//}
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['tweetId'])) {
+    $tweet = Tweet::loadTweetById(Database::connect(), $_GET['tweetId']);
+    $comments = Comment::loadAllCommentsByPostId(Database::connect(), $_GET['tweetId']);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $text = $_POST['text'];
+    $text = $_POST['tweetId'];
+
+    $msg = false;
+    $newComment = new Comment();
+    if(!($newComment->setText($_POST['text']))) {
+        $msg = 'Your tweet is empty or it has invalid length. Must be 0 - 140 character.';
+    } elseif (!isset($_SESSION['userId'])) {
+        $msg = 'You cant add comment when you are not sign in.';
+    }
+    else {
+        echo $newComment->getText();
+        $newComment->setCreation_date();
+        $newComment->setUserId($loggedUser);
+        $newComment->setPostId($_GET['tweetId']);
+        $newComment->saveToDB(Database::connect());
+        $msg = 'Your comment was added successful.';
+    }
+
+    $tweet = Tweet::loadTweetById(Database::connect(), $_GET['tweetId']);
+    $comments = Comment::loadAllCommentsByPostId(Database::connect(), $_GET['tweetId']);
+}
 
 ?>
 
@@ -29,20 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     <ul>
         <li><a href="home.php">Home</a></li>
         <li><a href="user.php?id=<?php echo $_SESSION['userId']; ?>">My Tweets</a></li>
-        <li>My messages</li>
+        <li><a href="messages.php">My messages</a></li>
         <li><a href="logout.php">Log Out</a></li>
     </ul>
 </nav>
 <hr>
-<!--<h2>Dodaj nowy Tweet!</h2>-->q
-
-<!--<form action="home.php" method="post" role="form">-->
-<!---->
-<!--    <label for="text">Treść Tweeta:</label><br>-->
-<!--    <textarea name="text" cols="50" rows="7" id="text" maxlength="140" placeholder="Your tweet here!"></textarea><br>-->
-<!---->
-<!--    <input type="submit" value="Tweet!">-->
-<!--</form>-->
 
 <style>
     table {
@@ -57,24 +78,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 <table>
     <tr>
-        <th colspan="4">All Tweets!</th>
+        <th colspan="3">Tweet Detail</th>
     </tr>
     <tr>
-        <th>Tweet ID</th>
-        <th>User ID</th>
+        <th>Author</th>
         <th>Text</th>
         <th>Creation Date</th>
     </tr>
     <?php
+        if(isset($tweet)) {
 
-        echo '<tr>';
-        echo '<td>' . $tweet->getId() . '</td>';
-        echo '<td>' . $tweet->getUserId() . '</td>';
-        echo '<td>' . $tweet->getText() . '</td>';
-        echo '<td>' . $tweet->getCreationDate() . '</td>';
-        echo '</tr>';
+            //Checking if the logged user is the author of tweet
+            $tweetBy = $tweet->getUserId() != $loggedUser ?
+                User::getUserNameById(Database::connect(), $tweet->getUserId())
+                : 'You';
+
+            echo '<tr>';
+            echo '<td>' . $tweetBy . '</td>';
+            echo '<td>' . $tweet->getText() . '</td>';
+            echo '<td>' . $tweet->getCreationDate() . '</td>';
+            echo '</tr>';
+        }
+
+    ?>
+
+    <tr>
+        <th colspan="4">Comments</th>
+    </tr>
+
+    <?php
+    if(isset($comments)) {
+
+        foreach ($comments as $comment) {
+
+            //Checking if the logged user is the author of comment
+            $commentBy = $comment->getUserId() != $loggedUser ?
+                User::getUserNameById(Database::connect(), $comment->getUserId())
+                : 'You';
+
+            echo '<tr>';
+            echo "<td><a href='user.php?id={$comment->getUserId()}'>$commentBy</a></td>";
+            echo '<td>' . $comment->getText() . '</td>';
+            echo '<td>' . $comment->getCreation_date() . '</td>';
+            echo '</tr>';
+        }
+    }
     ?>
 </table>
+
+<!--Comments-->
+<?php
+    if (isset($_GET['tweetId'])) { ?>
+        <form action="single_tweet.php?tweetId=<?php echo $_GET['tweetId']; ?>" method="post" role="form">
+
+            <label for="text">Comment:</label><br>
+            <textarea name="text" cols="50" rows="7" id="text" maxlength="60" placeholder="Your comment here!"></textarea><br>
+            <input type="hidden" name="tweetId" value="<?php echo $_GET['tweetId']; ?>">
+            <input type="submit" value="Comment!">
+        </form>
+
+   <?php }
+
+   if(isset($msg)) {
+        echo '<p>' . $msg . '</p>';
+   }
+?>
 </body>
 </html>
 

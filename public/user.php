@@ -3,9 +3,16 @@ session_start();
 require (__DIR__ . '/../src/Database.php');
 require (__DIR__ . '/../src/User.php');
 require (__DIR__ . '/../src/Tweet.php');
+require (__DIR__ . '/../src/Comment.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+//If user is not sign in - redirect to login page
+if(!isset($_SESSION['userId'])) {
+    header('Location: index.php');
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $user = User::loadUserById(Database::connect(), $_GET['id']);
+    $comments = Comment::loadAllCommentsByPostId(Database::connect(), $_GET['id']);
 }
 
 //if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -24,12 +31,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     <title>Twitter</title>
 </head>
 <body>
-<h1>Your Tweets <?php echo $user->getUserName(); ?> !</h1>
+<?php
+$hello = $user->getId() != $_SESSION['userId'] ? 'Tweets User ' . $user->getUserName() . '!' : 'Your all Tweets!';
+
+?>
+<h1><?php echo $hello; ?></h1>
+
+<?php
+    if ($user->getId() != $_SESSION['userId']) { ?>
+        <a href="sendmsg.php?id=<?php echo $user->getId(); ?>">Send private message</a>
+   <?php }
+?>
+
 <nav>
     <ul>
         <li><a href="home.php">Home</a></li>
-        <li><a href="user.php?id=<?php echo $user->getId(); ?>">My Tweets</a></li>
-        <li>My messages</li>
+        <li><a href="user.php?id=<?php echo $_SESSION['userId']; ?>">My Tweets</a></li>
+        <li><a href="messages.php">My messages</a></li>
         <li><a href="logout.php">Log Out</a></li>
     </ul>
 </nav>
@@ -44,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 <!--    <input type="submit" value="Tweet!">-->
 <!--</form>-->
 
-<hr>
 <style>
     table {
         margin:0 auto;
@@ -58,23 +75,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 <table>
     <tr>
-        <th colspan="4">All Tweets!</th>
+        <th colspan="5"><?php echo $hello; ?></th>
     </tr>
     <tr>
-        <th>Tweet ID</th>
-        <th>User ID</th>
         <th>Text</th>
         <th>Creation Date</th>
+        <th>Comments</th>
+        <th>About</th>
     </tr>
     <?php
     $allTweets = Tweet::loadAllTweetsByUserId(Database::connect(), $user->getId());
 
     foreach($allTweets as $tweet) {
+        $commentsCount = count(Comment::loadAllCommentsByPostId(Database::connect(), $tweet->getId()));
+
         echo '<tr>';
-        echo '<td>' . $tweet->getId() . '</td>';
-        echo '<td>' . $tweet->getUserId() . '</td>';
         echo '<td>' . $tweet->getText() . '</td>';
         echo '<td>' . $tweet->getCreationDate() . '</td>';
+        echo '<td>' . $commentsCount . '</td>';
+        echo "<td><a href='single_tweet.php?tweetId={$tweet->getId()}'>About</a></td>";
         echo '</tr>';
     }
     ?>
