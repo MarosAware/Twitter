@@ -54,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <li><a href="home.php">Home</a></li>
         <li><a href="user.php?id=<?php echo $_SESSION['userId']; ?>">My Tweets</a></li>
         <li><a href="messages.php">My messages</a></li>
+        <li><a href="profile.php">My profile</a></li>
         <li><a href="logout.php">Log Out</a></li>
     </ul>
 </nav>

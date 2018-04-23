@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <li><a href="home.php">Home</a></li>
         <li><a href="user.php?id=<?php echo $_SESSION['userId']; ?>">My Tweets</a></li>
         <li><a href="messages.php">My messages</a></li>
+        <li><a href="profile.php">My profile</a></li>
         <li><a href="logout.php">Log Out</a></li>
     </ul>
 </nav>
@@ -94,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 : 'You';
 
             echo '<tr>';
-            echo '<td>' . $tweetBy . '</td>';
+            echo "<td><a href='user.php?id={$tweet->getUserId()}'>$tweetBy</a></td>";
             echo '<td>' . $tweet->getText() . '</td>';
             echo '<td>' . $tweet->getCreationDate() . '</td>';
             echo '</tr>';

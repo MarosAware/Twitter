@@ -3,10 +3,10 @@
 class User
 {
     private
-    $id,
-    $username,
-    $hashPass,
-    $email;
+        $id,
+        $username,
+        $hashPass,
+        $email;
 
     public function __construct()
     {
@@ -19,18 +19,30 @@ class User
     public function __destruct()
     {
         // TODO: Implement __destruct() method.
-        echo "Zniszczony";
     }
 
     //Login Method
 
     public function login(PDO $conn, $email, $password)
     {
-        if(self::isValidEmail($email) && self::isValidPassword($password)) {
+        if (self::isValidEmail($email) && self::isValidPassword($password)) {
             $dbPassword = $this->getDBPasswordByEmail($conn, $email);
 
-            if($dbPassword !== false && password_verify($password, $dbPassword)) {
+            if ($dbPassword !== false && password_verify($password, $dbPassword)) {
                 return self::loadUserById($conn, $this->getUserIdByEmail($conn, $email));
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public function verifyPasswordByEmail(PDO $conn, $email, $password)
+    {
+        if (self::isValidEmail($email) && self::isValidPassword($password)) {
+            $dbPassword = $this->getDBPasswordByEmail($conn, $email);
+
+            if ($dbPassword !== false && password_verify($password, $dbPassword)) {
+                return true;
             } else {
                 return false;
             }
@@ -41,7 +53,7 @@ class User
 
     public static function isValidPassword($password)
     {
-        if(!empty($password) && strlen($password) > 0) {
+        if (!empty($password) && strlen($password) > 0) {
             return true;
         } else {
             return false;
@@ -50,7 +62,7 @@ class User
 
     public static function isValidUserName($username)
     {
-        if(!empty($username) && strlen($username) > 0 && is_string($username)) {
+        if (!empty($username) && strlen($username) > 0 && is_string($username)) {
             return true;
         } else {
             return false;
@@ -70,7 +82,7 @@ class User
 
     public function setPassword($newPass)
     {
-        if($this->isValidPassword($newPass)) {
+        if ($this->isValidPassword($newPass)) {
             $options = ['cost' => 10];
 
             $newHashedPass = password_hash($newPass, PASSWORD_BCRYPT, $options);
@@ -86,24 +98,26 @@ class User
     {
         if ($this->id == -1) { /* Saving new user to DB */
             $stmt = $conn->prepare(
-                'INSERT INTO Users(username, email, hash_pass) VALUES (:username, :email, :pass)' );
+                'INSERT INTO Users(username, email, hash_pass) VALUES (:username, :email, :pass)');
             $result = $stmt->execute(
-                [ 'username' => $this->username,
-                'email' => $this->email,
-                'pass' => $this->hashPass]);
+                ['username' => $this->username,
+                    'email' => $this->email,
+                    'pass' => $this->hashPass]);
             if ($result !== false) {
                 $this->id = $conn->lastInsertId();
                 return true;
-            } else { // User exists so we update User
-                $stmt = $conn->prepare(
-                    'UPDATE Users SET username=:username, email=:email, hash_pass=:hash_pass WHERE id=:id');
-                $result = $stmt->execute(
-                    [ 'username' => $this->username,
-                        'email' => $this->email,
-                        'hash_pass' => $this->hashPass,
-                        'id' => $this->id,
-                    ]);
-                if ($result === true) { return true; }
+            }
+        } else { // User exists so we update User
+            $stmt = $conn->prepare(
+                'UPDATE Users SET username=:username, email=:email, hash_pass=:hash_pass WHERE id=:id');
+            $result = $stmt->execute(
+                ['username' => $this->username,
+                    'email' => $this->email,
+                    'hash_pass' => $this->hashPass,
+                    'id' => $this->id,
+                ]);
+            if ($result === true) {
+                return true;
             }
         }
         return false;
@@ -127,7 +141,8 @@ class User
 
     public static function loadAllUsers(PDO $conn)
     {
-        $ret = []; $sql = "SELECT * FROM Users";
+        $ret = [];
+        $sql = "SELECT * FROM Users";
         $result = $conn->query($sql);
         if ($result !== false && $result->rowCount() != 0) {
             foreach ($result as $row) {
@@ -162,7 +177,7 @@ class User
         $stmt->bindValue(1, $email, PDO::PARAM_STR);
         $result = $stmt->execute(['email' => $email]);
 
-        if($result === true && $stmt->rowCount() > 0) {
+        if ($result === true && $stmt->rowCount() > 0) {
             return true;
         } else {
             return false;
@@ -171,7 +186,7 @@ class User
 
     public function setUserName($username)
     {
-        if($this->isValidUserName($username)) {
+        if ($this->isValidUserName($username)) {
             $this->username = $username;
             return true;
         } else {
@@ -182,7 +197,7 @@ class User
 
     public function setEmail($email)
     {
-        if($this->isValidEmail($email)) {
+        if ($this->isValidEmail($email)) {
             $this->email = $email;
             return true;
         } else {
@@ -205,7 +220,7 @@ class User
         $stmt = $conn->prepare('SELECT username FROM Users WHERE id=:userId');
         $result = $stmt->execute(['userId' => $userId]);
 
-        if($result === true && $stmt->rowCount() > 0) {
+        if ($result === true && $stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return $row['username'];
         } else {
@@ -223,7 +238,7 @@ class User
         $stmt = $conn->prepare('SELECT hash_pass FROM Users WHERE email=:email');
         $result = $stmt->execute(['email' => $email]);
 
-        if($result === true && $stmt->rowCount() > 0) {
+        if ($result === true && $stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return $row['hash_pass'];
         } else {
@@ -236,9 +251,21 @@ class User
         $stmt = $conn->prepare('SELECT id FROM Users WHERE email=:email');
         $result = $stmt->execute(['email' => $email]);
 
-        if($result === true && $stmt->rowCount() > 0) {
+        if ($result === true && $stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return $row['id'];
+        } else {
+            return false;
+        }
+    }
+
+    public static function isUserNameExists(PDO $conn, $username)
+    {
+        $stmt = $conn->prepare('SELECT * FROM Users WHERE username=:username');
+        $result = $stmt->execute(['username' => $username]);
+
+        if ($result === true && $stmt->rowCount() > 0) {
+            return true;
         } else {
             return false;
         }

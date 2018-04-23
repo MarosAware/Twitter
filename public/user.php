@@ -48,6 +48,7 @@ $hello = $user->getId() != $_SESSION['userId'] ? 'Tweets User ' . $user->getUser
         <li><a href="home.php">Home</a></li>
         <li><a href="user.php?id=<?php echo $_SESSION['userId']; ?>">My Tweets</a></li>
         <li><a href="messages.php">My messages</a></li>
+        <li><a href="profile.php">My profile</a></li>
         <li><a href="logout.php">Log Out</a></li>
     </ul>
 </nav>
@@ -81,7 +82,7 @@ $hello = $user->getId() != $_SESSION['userId'] ? 'Tweets User ' . $user->getUser
         <th>Text</th>
         <th>Creation Date</th>
         <th>Comments</th>
-        <th>About</th>
+        <th>Details</th>
     </tr>
     <?php
     $allTweets = Tweet::loadAllTweetsByUserId(Database::connect(), $user->getId());
@@ -93,7 +94,7 @@ $hello = $user->getId() != $_SESSION['userId'] ? 'Tweets User ' . $user->getUser
         echo '<td>' . $tweet->getText() . '</td>';
         echo '<td>' . $tweet->getCreationDate() . '</td>';
         echo '<td>' . $commentsCount . '</td>';
-        echo "<td><a href='single_tweet.php?tweetId={$tweet->getId()}'>About</a></td>";
+        echo "<td><a href='single_tweet.php?tweetId={$tweet->getId()}'>Details</a></td>";
         echo '</tr>';
     }
     ?>
