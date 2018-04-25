@@ -7,6 +7,7 @@ require (__DIR__ . '/../src/Comment.php');
 
 //If user is not sign in - redirect to login page
 if(!isset($_SESSION['userId'])) {
+    $_SESSION['warning']= '<p class="alert alert-warning">You can\'t view this site. Please sign in. </p>';
     header('Location: index.php');
 }
 
@@ -21,84 +22,143 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
 
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Twitter</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../src/css/style.css">
+    <title>Twitter by MarosAware</title>
 </head>
 <body>
-<?php
-$hello = $user->getId() != $_SESSION['userId'] ? 'Tweets User ' . $user->getUserName() . '!' : 'Your all Tweets!';
 
-?>
-<h1><?php echo $hello; ?></h1>
 
-<?php
-    if ($user->getId() != $_SESSION['userId']) { ?>
-        <a href="sendmsg.php?id=<?php echo $user->getId(); ?>">Send private message</a>
-   <?php }
-?>
 
-<nav>
-    <ul>
-        <li><a href="home.php">Home</a></li>
-        <li><a href="user.php?id=<?php echo $_SESSION['userId']; ?>">My Tweets</a></li>
-        <li><a href="messages.php">My messages</a></li>
-        <li><a href="profile.php">My profile</a></li>
-        <li><a href="logout.php">Log Out</a></li>
-    </ul>
+
+
+
+
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a href="home.php">Home</a></li>
+                <li><a href="user.php?id=<?php echo $user->getId(); ?>">My Tweets</a></li>
+                <li><a href="messages.php">My messages</a></li>
+                <li><a href="profile.php">My profile</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="logout.php"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+            </ul>
+        </div>
+    </div>
 </nav>
-<hr>
-<!--<h2>Dodaj nowy Tweet!</h2>-->
 
-<!--<form action="home.php" method="post" role="form">-->
-<!---->
-<!--    <label for="text">Treść Tweeta:</label><br>-->
-<!--    <textarea name="text" cols="50" rows="7" id="text" maxlength="140" placeholder="Your tweet here!"></textarea><br>-->
-<!---->
-<!--    <input type="submit" value="Tweet!">-->
-<!--</form>-->
+<div class="container-fluid text-center">
+    <div class="row content">
+        <div class="col-sm-12 text-left">
+            <div class="center">
+                <?php
+                $hello = $user->getId() != $_SESSION['userId'] ? 'Tweets User ' . $user->getUserName() . '!' : 'Your all Tweets!';
 
-<style>
-    table {
-        margin:0 auto;
-        border-collapse: collapse;
-        width:800px;
-    }
-    table, tr, td, th {
-        border:1px solid black;
-    }
-</style>
+                ?>
+                <h2><b><?php echo $hello; ?></b></h2>
+                <?php
+                if ($user->getId() != $_SESSION['userId']) { ?>
+                    <a class="btn btn-success" href="sendmsg.php?id=<?php echo $user->getId(); ?>">Send private message</a>
+                <?php }
+                ?>
+            </div>
+            <hr>
 
-<table>
-    <tr>
-        <th colspan="5"><?php echo $hello; ?></th>
-    </tr>
-    <tr>
-        <th>Text</th>
-        <th>Creation Date</th>
-        <th>Comments</th>
-        <th>Details</th>
-    </tr>
+
+
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="container">
+                        <?php
+                        $allTweets = Tweet::loadAllTweetsByUserId(Database::connect(), $user->getId());
+
+                        foreach($allTweets as $tweet) {
+                            $commentsCount = count(Comment::loadAllCommentsByPostId(Database::connect(), $tweet->getId()));
+
+                            $tweetBy = $tweet->getUserId() != $_SESSION['userId'] ?
+                                User::getUserNameById(Database::connect(), $tweet->getUserId())
+                                : 'You';
+
+                            ?>
+                            <div class="single-tweet">
+                                <div class="col-sm-4">
+                                    <span class="single-tweet--author"><?php echo "<a href='user.php?id={$tweet->getUserId()}'>$tweetBy</a>"?></span>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <span class="single-tweet--date"><?php echo $tweet->getCreationDate(); ?></span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <span class="single-tweet--comments">Comments: <?php echo $commentsCount; ?></span>
+                                </div>
+                                    <div class="col-sm-12 single-tweet--content">
+                                        <a href='single_tweet.php?tweetId=<?php echo $tweet->getId(); ?>'><?php echo $tweet->getText(); ?></a>
+                                    </div>
+
+                            </div>
+
+
+                        <?php    } ?>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <hr>
+            <div class="container">
+                <div class="center">
+                    <h3>Tweet to the world!</h3>
+                    <form action="home.php" method="post" role="form">
+                        <label for="text">Make Tweet:</label><br>
+                        <textarea class="form-control" name="text" cols="50" rows="7" id="text" maxlength="140" placeholder="Your tweet here!"></textarea><br>
+
+                        <input type="submit" class="btn btn-info" value="Tweet!">
+                    </form>
+
+                    <?php
+                    if (isset($msg)) {
+                        echo $msg;
+                    }
+
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="container-fluid text-center">
     <?php
-    $allTweets = Tweet::loadAllTweetsByUserId(Database::connect(), $user->getId());
+    $date = new DateTime('now');
+    $date = $date->format('Y');
 
-    foreach($allTweets as $tweet) {
-        $commentsCount = count(Comment::loadAllCommentsByPostId(Database::connect(), $tweet->getId()));
-
-        echo '<tr>';
-        echo '<td>' . $tweet->getText() . '</td>';
-        echo '<td>' . $tweet->getCreationDate() . '</td>';
-        echo '<td>' . $commentsCount . '</td>';
-        echo "<td><a href='single_tweet.php?tweetId={$tweet->getId()}'>Details</a></td>";
-        echo '</tr>';
-    }
     ?>
-</table>
+    <p>MarosAware <?php echo $date; ?></p>
+</footer>
+
 </body>
 </html>
-

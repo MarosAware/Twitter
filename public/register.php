@@ -4,9 +4,6 @@ require (__DIR__ . '/../src/Database.php');
 require (__DIR__ . '/../src/User.php');
 
 
-//MSG can be in session or can be array
-//Do it later
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $email = $_POST['email'];
@@ -16,11 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newUser = new User();
 
     if (!($newUser->setEmail($email)) || User::checkEmailExists(Database::connect(), $email)) {
-        $msg = 'Your Email is invalid or your email in database.';
+        $msg = '<p class="alert alert-danger">Your Email is invalid or your email in database.</p>';
     } elseif (!($newUser->setUserName($username))) {
-        $msg = 'Your Username is invalid or empty.';
+        $msg = '<p class="alert alert-danger">Your Username is invalid or empty.</p>';
+    } elseif (User::isUserNameExists(Database::connect(), $username) === true) {
+        $msg = '<p class="alert alert-danger">Your chosen username is already used</p>';
     } elseif(!($newUser->setPassword($password))) {
-        $msg = 'Your password is invalid or empty';
+        $msg = '<p class="alert alert-danger">Your password is invalid or empty</p>';
     } else {
 
         if($newUser->saveToDB(Database::connect())) {
@@ -29,6 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+
+
 }
 
 
@@ -36,50 +37,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Twitter</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../src/css/style.css">
+    <title>Twitter by MarosAware</title>
 </head>
 <body>
-<h1>Witamy na stronie rejestracji.</h1>
-<hr>
-
-<h2>Zarejestruj się!</h2>
-<form action="register.php" method="post" role="form">
-
-    <label for="name">Username</label><br>
-    <input type="text" name="username" id="name"><br>
-
-    <label for="email">Email</label><br>
-    <input type="email" name="email" id="email"><br>
-
-    <label for="password">Password</label><br>
-    <input type="password" name="password" id="password"><br>
 
 
-    <input type="submit" value="Register">
-</form>
+<nav class="navbar navbar-inverse">
 
-<?php
+</nav>
 
-if (isset($msg) && !empty($msg)) {
-    echo $msg;
-    if (isset($id) && $id != -1) { ?>
+<div class="container-fluid text-center">
+    <div class="row content">
+        <div class="col-sm-12 text-left">
+            <div class="center">
+                <h1><b>Register</b></h1>
+                <?php
+                if (!empty($msg) && isset($msg)) {
+                    echo $msg;
+                }
+                ?>
+            </div>
+            <hr>
 
-        <p>Now you can login here -> <a href="index.php">LOGIN PAGE</a></p>
 
-    <?php }
-}
+            <div class="center">
+                <form class="form-inline" action="register.php" method="post" role="form">
+
+                    <label for="name">Username</label><br>
+                    <input class="form-control" type="text" name="username" id="name"><br>
+
+                    <label for="email">Email</label><br>
+                    <input class="form-control" type="email" name="email" id="email"><br>
+
+                    <label for="password">Password</label><br>
+                    <input class="form-control" type="password" name="password" id="password"><br>
+                    <br>
+
+                    <input class="btn btn-info" type="submit" value="Register">
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
-?>
+
+<footer class="container-fluid text-center">
+    <?php
+    $date = new DateTime('now');
+    $date = $date->format('Y');
+
+    ?>
+    <p>MarosAware <?php echo $date; ?></p>
+</footer>
 
 </body>
 </html>
-

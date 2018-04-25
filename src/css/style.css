@@ -1,0 +1,208 @@
+/* Remove the navbar's default margin-bottom and rounded borders */
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+/*!* Set height of the grid so .sidenav can be 100% (adjust as needed) *!*/
+/*.row.content {height: 10%;}*/
+
+/*!* Set gray background color and 100% height *!*/
+/*.sidenav {*/
+    /*padding-top: 20px;*/
+    /*background-color: rgb(0, 26, 51, .8);*/
+    /*height: 100%;*/
+/*}*/
+
+/* Set black background color, white text and some padding */
+footer {
+    background-color: #555;
+    color: white;
+    padding: 15px;
+}
+
+/* On small screens, set height to 'auto' for sidenav and grid */
+@media screen and (max-width: 767px) {
+    .sidenav {
+        height: auto;
+        padding: 15px;
+    }
+    .row.content {height:auto;}
+}
+
+.center {
+    text-align:center;
+}
+
+.bold {
+    font-weight:700;
+    color:black;
+}
+
+.neutral {
+    color:black;
+}
+
+/*Single tweet*/
+
+.single-tweet {
+    background-color: rgba(51, 173, 255, 0.7);
+    width:70%;
+    margin:0 auto 20px auto;
+    text-align:center;
+}
+
+.single-tweet:after {
+    content: '';
+    display: table;
+    clear:both;
+}
+
+.single-tweet--author {
+    /*background-color:rgba(255,255,255, 0.6);*/
+    color:black;
+    font-weight:300;
+}
+
+.single-tweet--author a {
+    color:black;
+
+}
+
+.single-tweet--date{
+    font-weight:300;
+}
+
+.single-tweet--comments{
+    font-weight:300;
+}
+
+.single-tweet--content {
+    text-align:center;
+    color:black;
+    margin-top:5px;
+    font-size:1.8rem;
+}
+
+.single-tweet--content a {
+    color:black;
+}
+
+
+.description {
+    width:70%;
+    margin:0 auto;
+}
+
+.description__header {
+    text-align:center;
+}
+
+
+/*Single msg*/
+
+
+.single-msg {
+    background-color: Bisque;
+    width:70%;
+    margin:0 auto 10px auto;
+    text-align:center;
+}
+
+.single-msg:after {
+    content: '';
+    display: table;
+    clear:both;
+}
+
+.single-msg--author {
+    color:black;
+    font-weight:300;
+}
+
+.single-msg--receiver {
+    color:black;
+    font-weight:300;
+}
+
+.single-msg--receiver a {
+    color:black;
+}
+
+.single-msg--author a {
+    color:black;
+
+}
+
+.single-tweet--date{
+    font-weight:300;
+}
+
+/*Msg comments*/
+
+.single-msg--comments{
+    font-weight:300;
+}
+
+.single-msg--content {
+    text-align:center;
+    color:black;
+    margin-top:5px;
+    font-size:1.8rem;
+}
+
+.single-msg--content a {
+    color:black;
+}
+
+.d-zone {
+    color:rgba(255,0,0,0.8);
+
+}
+
+
+
+
+
+
+.single-comment {
+    background-color: Gainsboro;
+    width:70%;
+    margin:0 auto 10px auto;
+    text-align:center;
+}
+
+.single-comment:after {
+    content: '';
+    display: table;
+    clear:both;
+}
+
+.single-comment--author {
+    color:black;
+    font-weight:300;
+}
+
+.single-comment--author a {
+    color:black;
+
+}
+
+.single-comment--date{
+    font-weight:300;
+}
+
+.single-comment--comments{
+    font-weight:300;
+}
+
+.single-comment--content {
+    text-align:center;
+    color:black;
+    margin-top:5px;
+    font-size:1.8rem;
+}
+
+.single-comment--content a {
+    color:black;
+}

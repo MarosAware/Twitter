@@ -36,19 +36,6 @@ class User
         }
     }
 
-    public function verifyPasswordByEmail(PDO $conn, $email, $password)
-    {
-        if (self::isValidEmail($email) && self::isValidPassword($password)) {
-            $dbPassword = $this->getDBPasswordByEmail($conn, $email);
-
-            if ($dbPassword !== false && password_verify($password, $dbPassword)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
     //Validation Method Below:
 
     public static function isValidPassword($password)
@@ -79,6 +66,19 @@ class User
     }
 
     //Validation Method End
+
+    public function verifyPasswordByEmail(PDO $conn, $email, $password)
+    {
+        if (self::isValidEmail($email) && self::isValidPassword($password)) {
+            $dbPassword = $this->getDBPasswordByEmail($conn, $email);
+
+            if ($dbPassword !== false && password_verify($password, $dbPassword)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 
     public function setPassword($newPass)
     {

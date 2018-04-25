@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.21, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.22, for Linux (x86_64)
 --
 -- Host: localhost    Database: Twitter
 -- ------------------------------------------------------
--- Server version	5.7.21-0ubuntu0.16.04.1
+-- Server version	5.7.22-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -34,7 +34,7 @@ CREATE TABLE `Comments` (
   KEY `postId` (`postId`),
   CONSTRAINT `Comments_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `Comments_ibfk_2` FOREIGN KEY (`postId`) REFERENCES `Tweets` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `Comments` (
 
 LOCK TABLES `Comments` WRITE;
 /*!40000 ALTER TABLE `Comments` DISABLE KEYS */;
-INSERT INTO `Comments` VALUES (1,9,2,'2018-04-22 15:38:32','That\'s right!'),(2,9,1,'2018-04-22 15:39:00','Hello!'),(3,10,4,'2018-04-22 15:41:06','Yes! I agree!'),(4,10,3,'2018-04-22 15:41:25',':) Hi!'),(5,10,1,'2018-04-22 15:41:58','Nice to meet you!');
+INSERT INTO `Comments` VALUES (1,8,1,'2018-04-25 23:28:40','Nice to be here!'),(2,8,1,'2018-04-25 23:29:18','Woohooo! :)'),(3,9,1,'2018-04-25 23:32:44','I agree! :D');
 /*!40000 ALTER TABLE `Comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -67,7 +67,7 @@ CREATE TABLE `Messages` (
   KEY `userIdGet` (`userIdGet`),
   CONSTRAINT `Messages_ibfk_1` FOREIGN KEY (`userIdSend`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `Messages_ibfk_2` FOREIGN KEY (`userIdGet`) REFERENCES `Users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +76,7 @@ CREATE TABLE `Messages` (
 
 LOCK TABLES `Messages` WRITE;
 /*!40000 ALTER TABLE `Messages` DISABLE KEYS */;
-INSERT INTO `Messages` VALUES (1,8,10,'My first private message.','2018-04-22 18:46:51',1),(2,8,10,'My first private message.','2018-04-22 18:48:02',1),(3,8,10,'Sending again!','2018-04-22 18:50:09',1),(4,8,9,'You will have message form me.','2018-04-22 18:52:06',1),(5,9,8,'Hello :)','2018-04-22 19:22:56',1),(6,8,9,'Very long message that I will send to the testuser2, because I like him and I know, that he will read this message to the end.','2018-04-22 22:21:29',1),(7,8,9,'Hello my friend, nice to see you :) Where have you been in the last few days?','2018-04-23 00:01:33',1),(8,9,10,'Hello my friend how are you? It\'s everything\'s good?','2018-04-23 00:34:37',1),(9,9,10,'Another nice message.Another nice message.Another nice message.Another nice message.Another nice message.Another nice message.Another nice message.Another nice message.Another nice message.Another nice message.Another nice message.Another nice message.','2018-04-23 00:35:36',1),(10,9,10,'Hello!','2018-04-23 00:37:15',1);
+INSERT INTO `Messages` VALUES (1,9,8,'How are you?','2018-04-25 23:33:04',0),(2,9,8,'I will be later.','2018-04-25 23:33:20',1),(3,8,9,'Ok no problem!','2018-04-25 23:34:00',0);
 /*!40000 ALTER TABLE `Messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -96,7 +96,7 @@ CREATE TABLE `Tweets` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `userId` (`userId`),
   CONSTRAINT `Tweets_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `Users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,7 +105,7 @@ CREATE TABLE `Tweets` (
 
 LOCK TABLES `Tweets` WRITE;
 /*!40000 ALTER TABLE `Tweets` DISABLE KEYS */;
-INSERT INTO `Tweets` VALUES (1,8,'Hello World!!','2018-04-22 15:34:25'),(2,8,'Awesome!','2018-04-22 15:35:23'),(3,9,'Yeeeeyyy :) Hello!','2018-04-22 15:37:05'),(4,9,'So beautifull day!','2018-04-22 15:38:13'),(5,10,'Hello everyone! Have a nice day!','2018-04-22 15:40:01'),(6,10,'I will be later. Bye!','2018-04-22 15:40:31'),(7,9,'New tweet!','2018-04-23 00:36:12');
+INSERT INTO `Tweets` VALUES (1,8,'Hello World!','2018-04-25 23:28:08'),(2,9,'Hello everyone!','2018-04-25 23:32:06');
 /*!40000 ALTER TABLE `Tweets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,7 +124,7 @@ CREATE TABLE `Users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,7 +133,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (8,'testuser1@gmail.com','TestUser1','$2y$10$hSn0dpVEcIzmafjJYmfADeGfkMmga8M7WeRvDgVHegj2jCTWb5pMm'),(9,'testuser2@gmail.com','TestUser2','$2y$10$VMqQZHcohVCQbqkFfL.b5Odc3zP2owkC0tRcldl2m9H.UKCvtEUau'),(10,'testuser3@gmail.com','TestUser3','$2y$10$ZDMkcD1EHaSjZ.ZX2jHjdOU3lE03S/kyrG4KSACZI1Z.hBCc/oTka');
+INSERT INTO `Users` VALUES (8,'testuser@gmail.com','Test User','$2y$10$9iJgaUkpV54Z1d8mZJZ89.gm3R6wxuLQF3RVJIbXMcvCk0mMUbYeS'),(9,'newuser@gmail.com','New User','$2y$10$zeOreC9axuiu6fqDZXIJAeKJPdvgHLOh8c20DqVABG0V.xHLHcLu.');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -146,4 +146,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-23  0:41:37
+-- Dump completed on 2018-04-26  0:07:56
