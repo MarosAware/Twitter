@@ -16,13 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $comments = Comment::loadAllCommentsByPostId(Database::connect(), $_GET['id']);
 }
 
-//if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//
-//}
-
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,13 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     <title>Twitter by MarosAware</title>
 </head>
 <body>
-
-
-
-
-
-
-
 
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
@@ -72,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
             <div class="center">
                 <?php
                 $hello = $user->getId() != $_SESSION['userId'] ? 'Tweets User ' . $user->getUserName() . '!' : 'Your all Tweets!';
-
                 ?>
                 <h2><b><?php echo $hello; ?></b></h2>
                 <?php
@@ -82,9 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
                 ?>
             </div>
             <hr>
-
-
-
 
             <div class="row">
                 <div class="col-sm-12">
@@ -111,22 +94,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
                                 <div class="col-sm-4">
                                     <span class="single-tweet--comments">Comments: <?php echo $commentsCount; ?></span>
                                 </div>
-                                    <div class="col-sm-12 single-tweet--content">
-                                        <a href='single_tweet.php?tweetId=<?php echo $tweet->getId(); ?>'><?php echo $tweet->getText(); ?></a>
-                                    </div>
-
+                                <div class="col-sm-12 single-tweet--content">
+                                    <a href='single_tweet.php?tweetId=<?php echo $tweet->getId(); ?>'><?php echo $tweet->getText(); ?></a>
+                                </div>
                             </div>
-
-
                         <?php    } ?>
-
-
                     </div>
                 </div>
 
             </div>
-
-
 
             <hr>
             <div class="container">
@@ -138,7 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
 
                         <input type="submit" class="btn btn-info" value="Tweet!">
                     </form>
-
                     <?php
                     if (isset($msg)) {
                         echo $msg;

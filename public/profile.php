@@ -12,27 +12,29 @@ if(isset($_SESSION['userId'])) {
 
 }
 
+$conn = Database::connect();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Delete user account
     if (isset($_POST['delete'])) {
-        if ($user->delete(Database::connect())) {
+        if ($user->delete($conn)) {
 
             header('Location: logout.php');
         } else {
             $msg = '<p class="alert alert-danger">Delete account failed. Please try again later!</p>';
         }
     }
-
+    //Change username
     if (isset($_POST['submit']) && $_POST['submit']  === 'Change my username!') {
 
         $newUsername = $_POST['username'];
         $msg = false;
 
         if (User::isValidUserName($newUsername)) {
-            if (User::isUserNameExists(Database::connect(), $newUsername) === false) {
+            if (User::isUserNameExists($conn, $newUsername) === false) {
 
-                if ($user->setUserName($newUsername) && $user->saveToDB(Database::connect())) {
+                if ($user->setUserName($newUsername) && $user->saveToDB($conn)) {
                     $msg = '<p class="alert alert-success">Your username was changed successful!</p>';
                 }
             } else {
@@ -42,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $msg = '<p class="alert alert-warning">Your username is invalid or empty!</p>';
         }
 
-
+    //Change password
     } elseif (isset($_POST['submit']) && $_POST['submit'] === 'Change my password!') {
 
         $oldPassword = $_POST['passwordOld'];
@@ -50,10 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $newPassword2 = $_POST['password2'];
         $msg = false;
 
-        if ($user->verifyPasswordByEmail(Database::connect(), $user->getEmail(), $oldPassword)) {
+        if ($user->verifyPasswordByEmail($conn, $user->getEmail(), $oldPassword)) {
             if ($newPassword === $newPassword2) {
 
-                if ($user->setPassword($newPassword) && $user->saveToDB(Database::connect())) {
+                if ($user->setPassword($newPassword) && $user->saveToDB($conn)) {
                     $msg = '<p class="alert alert-success">Your password was changed successful!</p>';
                 }
             } else {
@@ -63,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $msg = '<p class="alert alert-warning">Your old password incorrect.</p>';
         }
 
-
+    //Change email
     } elseif (isset($_POST['submit']) && $_POST['submit'] === 'Change my email!') {
         $oldEmail = $_POST['emailOld'];
         $newEmail = $_POST['email'];
@@ -71,10 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $msg = false;
 
         if ($user->getEmail() === $oldEmail) {
-            if ($user->checkEmailExists(Database::connect(), $newEmail) === false) {
+            if ($user->checkEmailExists($conn, $newEmail) === false) {
                 if ($newEmail === $newEmail2) {
 
-                    if ($user->setEmail($newEmail) && $user->saveToDB(Database::connect())) {
+                    if ($user->setEmail($newEmail) && $user->saveToDB($conn)) {
                         $msg = '<p class="alert alert-success">Your email was changed successful!</p>';
                     }
                 } else {
@@ -90,10 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -107,8 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Twitter by MarosAware</title>
 </head>
 <body>
-
-
 
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
@@ -147,9 +144,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ?>
             </div>
             <hr>
-
-
-
 
             <div class="container">
                 <div class="row">
@@ -226,30 +220,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <input class="btn" type="submit" name="delete" value="Yes, please!">
                                     <input class="btn btn-primary" type="submit" value="No, take me back!">
                                 </form>
-
-
-
                             <?php }
-                            }
-
+                        }
                         ?>
-
-
                     </div>
                 </div>
 
             </div>
 
-
-
             <hr>
-            <div class="container">
-                <div class="center">
-
-
-
-                </div>
-            </div>
         </div>
     </div>
 </div>

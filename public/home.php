@@ -85,8 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <hr>
 
-
-
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
@@ -121,10 +119,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php    } ?>
 
 
-                        </div>
                     </div>
-
                 </div>
+
+            </div>
 
 
 

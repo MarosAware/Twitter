@@ -13,8 +13,9 @@ if(!isset($loggedUser)) {
     header('Location: index.php');
 }
 
-$msgSend = Message::loadAllMessagesByUserIdSend(Database::connect(), $loggedUser);
-$msgGet = Message::loadAllMessagesByUserIdGet(Database::connect(), $loggedUser);
+$conn = Database::connect();
+$msgSend = Message::loadAllMessagesByUserIdSend($conn, $loggedUser);
+$msgGet = Message::loadAllMessagesByUserIdGet($conn, $loggedUser);
 
 
 ?>
@@ -66,12 +67,9 @@ $msgGet = Message::loadAllMessagesByUserIdGet(Database::connect(), $loggedUser);
             </div>
             <hr>
 
-
-
-
             <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="description">
@@ -87,12 +85,10 @@ $msgGet = Message::loadAllMessagesByUserIdGet(Database::connect(), $loggedUser);
                         <?php
                         if (isset($msgSend)) {
 
-
-
                             foreach ($msgSend as $oneMsg) {
 
                                 //Determine Receiver of message
-                                $sendedTo = User::getUserNameById(Database::connect(), $oneMsg->getUserIdGet());
+                                $sendedTo = User::getUserNameById($conn, $oneMsg->getUserIdGet());
                                 $text = substr($oneMsg->getText(), 0, 30);
 
                                 ?>
@@ -117,15 +113,15 @@ $msgGet = Message::loadAllMessagesByUserIdGet(Database::connect(), $loggedUser);
                         } ?>
                         <!--msg received-->
                         <hr>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="description">
-                                <div class="description__header">
-                                    <h2>Messages Received</h2>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="description">
+                                    <div class="description__header">
+                                        <h2>Messages Received</h2>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
                         <?php
                         if (isset($msgGet)) {
@@ -133,7 +129,7 @@ $msgGet = Message::loadAllMessagesByUserIdGet(Database::connect(), $loggedUser);
 
                             foreach ($msgGet as $oneMsg) {
                                 //Determine Sender of message
-                                $getFrom = User::getUserNameById(Database::connect(), $oneMsg->getUserIdSend());
+                                $getFrom = User::getUserNameById($conn, $oneMsg->getUserIdSend());
                                 $text = substr($oneMsg->getText(), 0, 30);
 
                                 $class = $oneMsg->getIsRead() == false ? 'bold' : 'neutral';
@@ -155,32 +151,23 @@ $msgGet = Message::loadAllMessagesByUserIdGet(Database::connect(), $loggedUser);
 
                                 </div>
 
-
                                 <?php
                             }
                         } ?>
-
-
-
-
 
                     </div>
                 </div>
 
             </div>
 
-
-
             <hr>
             <div class="container">
                 <div class="center">
-
 
                     <?php
                     if (isset($msg)) {
                         echo $msg;
                     }
-
                     ?>
                 </div>
             </div>

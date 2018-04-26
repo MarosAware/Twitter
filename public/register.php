@@ -12,14 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $msg = false;
     $newUser = new User();
 
+    //Validation stuff
     if (!($newUser->setEmail($email)) || User::checkEmailExists(Database::connect(), $email)) {
-        $msg = '<p class="alert alert-danger">Your Email is invalid or your email in database.</p>';
+        $msg = '<p class="alert alert-danger">Your Email is invalid or your email already in use.</p>';
     } elseif (!($newUser->setUserName($username))) {
         $msg = '<p class="alert alert-danger">Your Username is invalid or empty.</p>';
     } elseif (User::isUserNameExists(Database::connect(), $username) === true) {
-        $msg = '<p class="alert alert-danger">Your chosen username is already used</p>';
+        $msg = '<p class="alert alert-danger">Your chosen username is already used.</p>';
     } elseif(!($newUser->setPassword($password))) {
-        $msg = '<p class="alert alert-danger">Your password is invalid or empty</p>';
+        $msg = '<p class="alert alert-danger">Your password is invalid or empty.</p>';
     } else {
 
         if($newUser->saveToDB(Database::connect())) {
@@ -27,17 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: home.php');
         }
     }
-
-
-
 }
 
-
-
-
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -70,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <hr>
 
-
             <div class="center">
                 <form class="form-inline" action="register.php" method="post" role="form">
 
@@ -91,8 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </div>
-
-
 
 <footer class="container-fluid text-center">
     <?php

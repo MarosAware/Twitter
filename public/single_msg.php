@@ -11,7 +11,6 @@ if(!isset($loggedUser)) {
     header('Location: index.php');
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if (isset($_GET['msgId'])) {
@@ -21,8 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,13 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     <title>Twitter by MarosAware</title>
 </head>
 <body>
-
-
-
-
-
-
-
 
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
@@ -74,8 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             </div>
             <hr>
 
-
-
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
@@ -85,7 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
                             $oneMsg->setIsRead(true);
                             $oneMsg->saveToDB(Database::connect());
-
 
                             if ($oneMsg->getUserIdSend() === $loggedUser) {
                                 $author = User::getUserNameById(Database::connect(), $loggedUser);
@@ -114,11 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                                 </div>
 
                             </div>
-
-
                         <?php    } ?>
-
-
                     </div>
                 </div>
 

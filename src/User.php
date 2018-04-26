@@ -2,11 +2,7 @@
 
 class User
 {
-    private
-        $id,
-        $username,
-        $hashPass,
-        $email;
+    private $id, $username, $hashPass, $email;
 
     public function __construct()
     {
@@ -271,14 +267,4 @@ class User
         }
     }
 
-
-
 }
-
-//$user = new User();
-//$user->setUserName('Wiesiek');
-//$user->setPassword('wiesiek123');
-//$user->setEmail('wiesiek@gmail.com');
-//var_dump($user->saveToDB(Database::connect()));
-//
-//var_dump($user->saveToDB(Database::connect()));

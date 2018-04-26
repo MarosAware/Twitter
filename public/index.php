@@ -43,13 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-
-
-
-
-
-
-
 <nav class="navbar navbar-inverse">
 
 </nav>
@@ -87,8 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </div>
-
-
 
 <footer class="container-fluid text-center">
     <?php

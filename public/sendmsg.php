@@ -39,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,8 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Twitter by MarosAware</title>
 </head>
 <body>
-
-
 
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
